@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using AOSharp.Common.GameData;
-using org.critterai.nav;
 using sVector3 = SharpNav.Geometry.Vector3;
 using NavmeshQuery = SharpNav.NavMeshQuery;
 using PathCorridor = SharpNav.Crowds.PathCorridor;
@@ -32,13 +31,13 @@ namespace AOSharp.Pathfinding
         {
             List<Vector3> finalPath = new List<Vector3>();
 
-            if (NavUtil.Failed(FindNearestPoint(start, new sVector3(0.5f, 2, 0.5f), out NavPoint origin)) || origin.Position == new sVector3())
+            if (FindNearestPoint(start, new sVector3(0.5f, 2, 0.5f), out NavPoint origin) || origin.Position == new sVector3())
             {
                 Chat.WriteLine("Could not find valid origin point on navmesh");
                 return new List<Vector3>();
             }
 
-            if (NavUtil.Failed(FindNearestPoint(end, new sVector3(0.5f, 2, 0.5f), out NavPoint destination)) || destination.Position == new sVector3())
+            if (FindNearestPoint(end, new sVector3(0.5f, 2, 0.5f), out NavPoint destination) || destination.Position == new sVector3())
             {
                 Chat.WriteLine("Could not find valid destination point on navmesh");
                 return new List<Vector3>();
@@ -186,24 +185,32 @@ namespace AOSharp.Pathfinding
             dest.Z = v1.Z + v2.Z * s;
         }
 
-        private PathCorridor GeneratePathCorridor(Vector3 start, Vector3 end)
-        {
-            if (NavUtil.Failed(FindNearestPoint(start, new sVector3(0.3f, 2, 0.3f), out NavPoint origin)) || origin.Position == new sVector3())
-                return null;
+        //private PathCorridor GeneratePathCorridor(Vector3 start, Vector3 end)
+        //{
+        //    if (FindNearestPoint(start, new sVector3(0.3f, 2, 0.3f), out NavPoint origin) || origin.Position == new sVector3())
+        //    {
+        //        Chat.WriteLine("Could not find nearest origin point");
+        //        return null;
+        //    }
+        //    if (FindNearestPoint(end, new sVector3(0.3f, 2, 0.3f), out NavPoint destination) || destination.Position == new sVector3())
+        //    {
+        //        Chat.WriteLine("Could not find nearest destination point");
+        //        return null;
+        //    }
 
-            if (NavUtil.Failed(FindNearestPoint(end, new sVector3(0.3f, 2, 0.3f), out NavPoint destination)) || destination.Position == new sVector3())
-                return null;
+        //    SharpNav.Pathfinding.Path path = new SharpNav.Pathfinding.Path();
 
-            SharpNav.Pathfinding.Path path = new SharpNav.Pathfinding.Path();
+        //    if (!_query.FindPath(ref origin, ref destination, _filter, path))
+        //    {
+        //        Chat.WriteLine("Could not find path");
+        //        return null;
+        //    }
 
-            if (!_query.FindPath(ref origin, ref destination, _filter, path))
-                return null;
+        //    _pathCorridor.SetCorridor(end.ToSharpNav(), path);
+        //    _pathCorridor.MovePosition(destination.Position, _query);
 
-            _pathCorridor.SetCorridor(end.ToSharpNav(), path);
-            _pathCorridor.MovePosition(destination.Position, _query);
-
-            return _pathCorridor;
-        }
+        //    return _pathCorridor;
+        //}
 
         private sVector3[] StraightenPath(sVector3 start, sVector3 end, SharpNav.Pathfinding.Path path)
         {
@@ -220,13 +227,20 @@ namespace AOSharp.Pathfinding
             return paths.ToArray();
         }
 
-        public NavStatus FindNearestPoint(Vector3 position, sVector3 extents, out NavPoint point)
+        public bool FindNearestPoint(Vector3 position, sVector3 extents, out NavPoint point)
         {
-            sVector3 startPoint = position.ToSharpNav();
-            _query.FindNearestPoly(ref startPoint, ref extents, out point);
+            point = new NavPoint();
 
-            return NavStatus.Sucess;
-          //  return _query.FindNearestPoly(ref position.ToSharpNav(),ref extents, out NavPoint nearestPt);
+            try
+            {
+                sVector3 startPoint = position.ToSharpNav();
+                _query.FindNearestPoly(ref startPoint, ref extents, out point);
+                return true;
+            }
+            catch 
+            {
+                return false;
+            }
         }
 
         public bool IsUsingNavmesh(TiledNavMesh navmesh)

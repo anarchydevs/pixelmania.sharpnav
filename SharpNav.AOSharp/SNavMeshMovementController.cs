@@ -1,10 +1,9 @@
 ﻿using AOSharp.Core;
 using AOSharp.Common.GameData;
 using System.Collections.Generic;
-using org.critterai.nav;
 using AOSharp.Core.UI;
-using NavmeshMovementController;
 using SharpNav;
+using System;
 
 namespace AOSharp.Pathfinding
 {
@@ -16,7 +15,7 @@ namespace AOSharp.Pathfinding
         protected readonly string _navMeshFolderPath;
         private double _nextPathUpdate = 0;
 
-        public delegate Navmesh NavmeshResolveDelegate(SNavMeshMovementController movementController);
+        public delegate NavMesh NavmeshResolveDelegate(SNavMeshMovementController movementController);
         public event NavmeshResolveDelegate NavmeshResolve;
         private TriMeshData _triMeshData;
         private SNavMeshSettings _navMeshSettings;
@@ -62,7 +61,7 @@ namespace AOSharp.Pathfinding
 
                 return true;
             }
-            catch (PointNotOnNavMeshException e)
+            catch
             {
                 return false;
             }
@@ -118,12 +117,12 @@ namespace AOSharp.Pathfinding
         {
             try
             {
-                base.SetWaypoints(_pathfinder.GeneratePath(DynelManager.LocalPlayer.Position, Destination));
+                SetWaypoints(_pathfinder.GeneratePath(DynelManager.LocalPlayer.Position, Destination));
             }
-            catch(PointNotOnNavMeshException e)
+            catch(Exception ex)
             {
-                Chat.WriteLine(e.Message);
-                base.SetWaypoints(new List<Vector3>());
+                Chat.WriteLine(ex.Message);
+                SetWaypoints(new List<Vector3>());
             }
         }
     }

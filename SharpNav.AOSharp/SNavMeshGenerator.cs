@@ -6,13 +6,11 @@ using System;
 using AOSharp.Core.UI;
 using SharpNav;
 using AOSharp.Common.Unmanaged.DbObjects;
-using AOSharp.Recast;
 using System.Diagnostics;
 using Mesh = AOSharp.Common.GameData.Mesh;
 using STriangle3 = SharpNav.Geometry.Triangle3;
 using Vector3 = AOSharp.Common.GameData.Vector3;
 using System.Threading.Tasks;
-using org.critterai.nav;
 
 namespace AOSharp.Pathfinding
 {
