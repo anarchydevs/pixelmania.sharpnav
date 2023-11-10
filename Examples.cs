@@ -34,6 +34,16 @@ namespace SharpNav
             });
         }
 
+        public static void SaveNavMeshToFile(NavMesh navMesh)
+        {
+            SNavMeshSerializer serializer = new SNavMeshSerializer();
+
+            if (serializer.SaveToFile(navMesh, $"C:\\Users\\someuser\\Desktop\\navmeshtest\\test.nav"))
+            {
+
+            }
+        }
+
         public static void LoadNavMeshFromFile()
         {
             SNavMeshSerializer serializer = new SNavMeshSerializer();
@@ -44,22 +54,12 @@ namespace SharpNav
             }
         }
 
-        public static void MovementExample()
+        public static void GenerateAndSetPath()
         {
             List<Vector3> _testPath = SMovementController.Instance?.GeneratePath(DynelManager.LocalPlayer.Position, new Vector3(107.3, 3.3, 97.6));
 
             SMovementController.Instance?.SetPath(_testPath);
          // SMovementController.Instance.AppendPath(_testPath);
-        }
-
-        public static void SaveNavMeshToFile(NavMesh navMesh)
-        {
-            SNavMeshSerializer serializer = new SNavMeshSerializer();
-
-            if (serializer.SaveToFile(navMesh, $"C:\\Users\\someuser\\Desktop\\navmeshtest\\test.nav"))
-            {
-
-            }
         }
     }
 }
