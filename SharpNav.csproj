@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{59E1AEAB-E9BA-4C8E-A77C-E2FE2584F715}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SharpNav</RootNamespace>
+    <AssemblyName>SharpNav</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AOSharp.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\AOSharpSDK.1.0.49\lib\net48\AOSharp.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="AOSharp.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\AOSharpSDK.1.0.49\lib\net48\AOSharp.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="AOSharp.Recast, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\AOSharpSDK.Nav.1.0.5\lib\net48\AOSharp.Recast.dll</HintPath>
+    </Reference>
+    <Reference Include="cai-nav, Version=0.4.0.0, Culture=neutral, processorArchitecture=x86">
+      <HintPath>packages\AOSharpSDK.Nav.1.0.5\lib\net48\cai-nav.dll</HintPath>
+    </Reference>
+    <Reference Include="cai-nav-rcn, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <HintPath>packages\AOSharpSDK.Nav.1.0.5\lib\net48\cai-nav-rcn.dll</HintPath>
+    </Reference>
+    <Reference Include="cai-nmbuild, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\AOSharpSDK.Nav.1.0.5\lib\net48\cai-nmbuild.dll</HintPath>
+    </Reference>
+    <Reference Include="cai-nmgen, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\AOSharpSDK.Nav.1.0.5\lib\net48\cai-nmgen.dll</HintPath>
+    </Reference>
+    <Reference Include="cai-nmgen-rcn, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <HintPath>packages\AOSharpSDK.Nav.1.0.5\lib\net48\cai-nmgen-rcn.dll</HintPath>
+    </Reference>
+    <Reference Include="cai-util, Version=0.5.0.0, Culture=neutral, processorArchitecture=x86">
+      <HintPath>packages\AOSharpSDK.Nav.1.0.5\lib\net48\cai-util.dll</HintPath>
+    </Reference>
+    <Reference Include="NavmeshMovementController, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\AOSharpSDK.Nav.1.0.5\lib\net48\NavmeshMovementController.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="YamlDotNet, Version=13.0.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e, processorArchitecture=MSIL">
+      <HintPath>packages\YamlDotNet.13.7.1\lib\net47\YamlDotNet.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="SharpNav.Lib\Area.cs" />
+    <Compile Include="SharpNav.Lib\AreaGenerator.cs" />
+    <Compile Include="SharpNav.Lib\Cell.cs" />
+    <Compile Include="SharpNav.Lib\Collections\BVTree.cs" />
+    <Compile Include="SharpNav.Lib\Collections\Generic\BufferedQueue.cs" />
+    <Compile Include="SharpNav.Lib\Collections\Generic\BufferedStack.cs" />
+    <Compile Include="SharpNav.Lib\Collections\Generic\IValueWithCost.cs" />
+    <Compile Include="SharpNav.Lib\Collections\Generic\PriorityQueue.cs" />
+    <Compile Include="SharpNav.Lib\Collections\Generic\ProximityGrid.cs" />
+    <Compile Include="SharpNav.Lib\CompactCell.cs" />
+    <Compile Include="SharpNav.Lib\CompactHeightfield.cs" />
+    <Compile Include="SharpNav.Lib\CompactSpan.cs" />
+    <Compile Include="SharpNav.Lib\CompactSpanReference.cs" />
+    <Compile Include="SharpNav.Lib\Contour.cs" />
+    <Compile Include="SharpNav.Lib\ContourBuildFlags.cs" />
+    <Compile Include="SharpNav.Lib\ContourSet.cs" />
+    <Compile Include="SharpNav.Lib\ContourVertex.cs" />
+    <Compile Include="SharpNav.Lib\Crowds\Agent.cs" />
+    <Compile Include="SharpNav.Lib\Crowds\Crowd.cs" />
+    <Compile Include="SharpNav.Lib\Crowds\CrowdAgentState.cs" />
+    <Compile Include="SharpNav.Lib\Crowds\LocalBoundary.cs" />
+    <Compile Include="SharpNav.Lib\Crowds\ObstacleAvoidanceQuery.cs" />
+    <Compile Include="SharpNav.Lib\Crowds\PathCorridor.cs" />
+    <Compile Include="SharpNav.Lib\Crowds\PathQueue.cs" />
+    <Compile Include="SharpNav.Lib\Crowds\Status.cs" />
+    <Compile Include="SharpNav.Lib\Crowds\TargetState.cs" />
+    <Compile Include="SharpNav.Lib\Crowds\UpdateFlags.cs" />
+    <Compile Include="SharpNav.Lib\Direction.cs" />
+    <Compile Include="SharpNav.Lib\EdgeFlags.cs" />
+    <Compile Include="SharpNav.Lib\Geometry\BBox2i.cs" />
+    <Compile Include="SharpNav.Lib\Geometry\BBox3.cs" />
+    <Compile Include="SharpNav.Lib\Geometry\Containment.cs" />
+    <Compile Include="SharpNav.Lib\Geometry\Distance.cs" />
+    <Compile Include="SharpNav.Lib\Geometry\Intersection.cs" />
+    <Compile Include="SharpNav.Lib\Geometry\Triangle3.cs" />
+    <Compile Include="SharpNav.Lib\Geometry\TriangleEnumerable.cs" />
+    <Compile Include="SharpNav.Lib\Geometry\Vector2.cs" />
+    <Compile Include="SharpNav.Lib\Geometry\Vector2i.cs" />
+    <Compile Include="SharpNav.Lib\Geometry\Vector3.cs" />
+    <Compile Include="SharpNav.Lib\Geometry\Vector3Extensions.cs" />
+    <Compile Include="SharpNav.Lib\Heightfield.cs" />
+    <Compile Include="SharpNav.Lib\Heightfield.Rasterization.cs" />
+    <Compile Include="SharpNav.Lib\HeightPatch.cs" />
+    <Compile Include="SharpNav.Lib\IO\Json\AreaConverter.cs" />
+    <Compile Include="SharpNav.Lib\IO\Json\NavMeshJsonSerializer.cs" />
+    <Compile Include="SharpNav.Lib\IO\Json\PolyIdConverter.cs" />
+    <Compile Include="SharpNav.Lib\IO\Json\Vector3Converter.cs" />
+    <Compile Include="SharpNav.Lib\IO\NavMeshConfigurationFile.cs" />
+    <Compile Include="SharpNav.Lib\IO\NavMeshSerializer.cs" />
+    <Compile Include="SharpNav.Lib\MathHelper.cs" />
+    <Compile Include="SharpNav.Lib\NavMesh.cs" />
+    <Compile Include="SharpNav.Lib\NavMeshBuilder.cs" />
+    <Compile Include="SharpNav.Lib\NavMeshGenerationSettings.cs" />
+    <Compile Include="SharpNav.Lib\NavMeshQuery.cs" />
+    <Compile Include="SharpNav.Lib\NodeFlags.cs" />
+    <Compile Include="SharpNav.Lib\NodePool.cs" />
+    <Compile Include="SharpNav.Lib\Pathfinding\BoundarySide.cs" />
+    <Compile Include="SharpNav.Lib\Pathfinding\FindPathOptions.cs" />
+    <Compile Include="SharpNav.Lib\Pathfinding\Link.cs" />
+    <Compile Include="SharpNav.Lib\Pathfinding\NavNode.cs" />
+    <Compile Include="SharpNav.Lib\Pathfinding\NavPoint.cs" />
+    <Compile Include="SharpNav.Lib\Pathfinding\NavPoly.cs" />
+    <Compile Include="SharpNav.Lib\Pathfinding\NavPolyId.cs" />
+    <Compile Include="SharpNav.Lib\Pathfinding\NavPolyIdManager.cs" />
+    <Compile Include="SharpNav.Lib\Pathfinding\NavQueryFilter.cs" />
+    <Compile Include="SharpNav.Lib\Pathfinding\NavTile.cs" />
+    <Compile Include="SharpNav.Lib\Pathfinding\OffMeshConnection.cs" />
+    <Compile Include="SharpNav.Lib\Pathfinding\Path.cs" />
+    <Compile Include="SharpNav.Lib\Pathfinding\PathBuildFlags.cs" />
+    <Compile Include="SharpNav.Lib\Pathfinding\PathfindingCommon.cs" />
+    <Compile Include="SharpNav.Lib\Pathfinding\RaycastHit.cs" />
+    <Compile Include="SharpNav.Lib\Pathfinding\RaycastOptions.cs" />
+    <Compile Include="SharpNav.Lib\Pathfinding\StraightPathFlags.cs" />
+    <Compile Include="SharpNav.Lib\PolyBounds.cs" />
+    <Compile Include="SharpNav.Lib\PolyMesh.cs" />
+    <Compile Include="SharpNav.Lib\PolyMeshDetail.cs" />
+    <Compile Include="SharpNav.Lib\PolyVertex.cs" />
+    <Compile Include="SharpNav.Lib\Region.cs" />
+    <Compile Include="SharpNav.Lib\Span.cs" />
+    <Compile Include="SharpNav.Lib\SpanReference.cs" />
+    <Compile Include="SharpNav.Lib\TiledNavMesh.cs" />
+    <Compile Include="SharpNav.AOSharp\Extensions.cs" />
+    <Compile Include="Examples.cs" />
+    <Compile Include="Main.cs" />
+    <Compile Include="SharpNav.AOSharp\SNavMeshDrawSettings.cs" />
+    <Compile Include="SharpNav.AOSharp\SNavMeshSerializer.cs" />
+    <Compile Include="SharpNav.AOSharp\SNavMeshGenerator.cs" />
+    <Compile Include="SharpNav.AOSharp\SMovementController.cs" />
+    <Compile Include="SharpNav.AOSharp\SNavMeshMovementController.cs" />
+    <Compile Include="SharpNav.AOSharp\SPathfinder.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

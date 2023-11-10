@@ -1,0 +1,10 @@
+﻿namespace AOSharp.Pathfinding
+{
+    public static class Extensions
+    {
+        public static SharpNav.Geometry.Vector3 ToSharpNav(this AOSharp.Common.GameData.Vector3 vector3) => new SharpNav.Geometry.Vector3(vector3.X, vector3.Y, vector3.Z);
+
+        public static Common.GameData.Vector3 ToVector3(this SharpNav.Geometry.Vector3 vector3) => new AOSharp.Common.GameData.Vector3(vector3.X, vector3.Y, vector3.Z);
+
+    }
+}
