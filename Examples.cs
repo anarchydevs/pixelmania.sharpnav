@@ -8,6 +8,17 @@
 //{
 //    public class Examples
 //    {
+//        public static void ControllerSetter()
+//        {
+//            var navMeshControllerSettings = new SNavMeshControllerSettings
+//            {
+//                NavMeshSettings = new SNavMeshSettings { DrawDistance = 100, DrawNavMesh = true },
+//                PathSettings = new SPathSettings { DrawPath = false }
+//            };
+
+//            SMovementController.Set(new SNavMeshMovementController(navMeshControllerSettings));
+//        }
+
 //        public static void Generation()
 //        {
 //            NavMeshGenerationSettings settings = NavMeshGenerationSettings.Default;
@@ -21,14 +32,7 @@
 //                if (navMesh.Result == null)
 //                    return;
 
-//                var navMeshControllerSettings = new SNavMeshControllerSettings
-//                {
-//                    NavMeshSettings = new SNavMeshSettings { DrawDistance = 100, DrawNavMesh = true },
-//                    PathSettings = new SPathSettings { DrawPath = false }
-//                };
-
-//                SMovementController.Set(new SNavMeshMovementController(navMeshControllerSettings));
-//                SMovementController.Instance.SetNavmesh(navMesh.Result);
+//                SMovementController.Instance?.SetNavmesh(navMesh.Result);
 //            });
 //        }
 
@@ -57,7 +61,7 @@
 //            List<Vector3> _testPath = SMovementController.Instance?.GeneratePath(DynelManager.LocalPlayer.Position, new Vector3(107.3, 3.3, 97.6));
 
 //            SMovementController.Instance?.SetPath(_testPath);
-//         // SMovementController.Instance.AppendPath(_testPath);
+//            // SMovementController.Instance.AppendPath(_testPath);
 //        }
 //    }
 //}
