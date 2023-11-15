@@ -20,14 +20,16 @@ namespace AOSharp.Pathfinding
         private TriMeshData _triMeshData;
         private SNavMeshSettings _navMeshSettings;
 
-        public SNavMeshMovementController(SNavMeshControllerSettings settings) : base(settings.PathSettings.DrawPath)
+        public SNavMeshMovementController(SNavMeshControllerSettings settings) : base(settings.PathSettings)
         {
             _navMeshSettings = settings.NavMeshSettings;
         }
 
-        public SNavMeshMovementController() : base(false) 
+        public SNavMeshMovementController() : base() 
         {
-            _navMeshSettings = new SNavMeshSettings();
+            var controllerSettings = new SNavMeshControllerSettings();
+            _navMeshSettings = controllerSettings.NavMeshSettings;
+            _pathSettings = controllerSettings.PathSettings;
         }
 
         public override void Update(object sender, float time)

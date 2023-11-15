@@ -16,33 +16,41 @@ namespace AOSharp.Pathfinding
 {
     public class SMovementController
     {
+        public static SNavMeshMovementController Instance { get; internal set; }
+
+        public bool IsNavigating => _paths.Count != 0;
+        public EventHandler DestinationReached;
+
         private const float UpdateInterval = 0.2f;
         private const float UnstuckInterval = 5f;
         private const float UnstuckThreshold = 2f;
-
-        public bool IsNavigating => _paths.Count != 0;
-
         private double _nextUpdate = 0;
         private double _nextUstuckCheck = Time.NormalTime;
         private float _lastDist = 0f;
-        private bool _drawPath;
-        protected Queue<Path> _paths = new Queue<Path>();
-
         private ConcurrentQueue<MovementAction> _movementActionQueue = new ConcurrentQueue<MovementAction>();
 
-        public EventHandler DestinationReached;
+        protected Queue<Path> _paths = new Queue<Path>();
+        protected SPathSettings _pathSettings;
 
-        public static SNavMeshMovementController Instance { get; internal set; }
-
-        public SMovementController(bool drawPath = true)
+        public SMovementController(SPathSettings pathSettings)
         {
-            _drawPath = drawPath;
+            _pathSettings = pathSettings;
+        }
+
+        public SMovementController()
+        {
         }
 
         public static void Set(SNavMeshMovementController movementcontroller)
         {
             Instance = movementcontroller;
         }
+
+        public static void Set()
+        {
+            Instance = new SNavMeshMovementController();
+        }
+
 
         public virtual void Update(object sender, float time)
         {
@@ -95,7 +103,7 @@ namespace AOSharp.Pathfinding
                     _nextUpdate = Time.NormalTime + UpdateInterval;
                 }
 
-                if (_drawPath)
+                if (_pathSettings.DrawPath)
                     _paths.Peek().Draw();
             }
             catch (Exception e)

@@ -2,18 +2,41 @@
 {
     public class SNavMeshControllerSettings
     {
-        public SNavMeshSettings NavMeshSettings = new SNavMeshSettings();
-        public SPathSettings PathSettings = new SPathSettings();
+        public SNavMeshSettings NavMeshSettings;
+        public SPathSettings PathSettings;
+
+        public SNavMeshControllerSettings(SNavMeshSettings navMeshSettings, SPathSettings pathSettings)
+        {
+            NavMeshSettings = navMeshSettings;
+            PathSettings = pathSettings;    
+        }
+
+        public SNavMeshControllerSettings()
+        {
+            NavMeshSettings = new SNavMeshSettings();
+            PathSettings = new SPathSettings(); 
+        }
     }
 
     public class SNavMeshSettings
     {
-        public bool DrawNavMesh = false;
-        public int DrawDistance = 100;
+        public bool DrawNavMesh;
+        public int DrawDistance;
+
+        public SNavMeshSettings(bool drawDebug = true, int drawDistance = 100)
+        {
+            DrawNavMesh = drawDebug;
+            DrawDistance = drawDistance;
+        }
     }
 
     public class SPathSettings
     {
-        public bool DrawPath = false;
+        public bool DrawPath;
+
+        public SPathSettings(bool drawPath = true)
+        {
+            DrawPath = drawPath;
+        }
     }
 }

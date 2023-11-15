@@ -10,13 +10,10 @@
 //    {
 //        public static void ControllerSetter()
 //        {
-//            var navMeshControllerSettings = new SNavMeshControllerSettings
-//            {
-//                NavMeshSettings = new SNavMeshSettings { DrawDistance = 100, DrawNavMesh = true },
-//                PathSettings = new SPathSettings { DrawPath = false }
-//            };
-
+//            var navMeshControllerSettings = new SNavMeshControllerSettings(new SNavMeshSettings(true, 100), new SPathSettings(true));
 //            SMovementController.Set(new SNavMeshMovementController(navMeshControllerSettings));
+
+//            //SMovementController.Set(); Alternatively you can just .Set(), which will load the default settings for everything and populate or overwrite the SMovementController.Instance
 //        }
 
 //        public static void Generation()
