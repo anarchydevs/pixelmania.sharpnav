@@ -10,7 +10,7 @@ namespace Test
     {
         public override void Run(string pluginDir)
         {
-            Chat.WriteLine("Sharp Nav Test Build");
+            Chat.WriteLine("Sharp Nav Dev");
 
             Game.OnUpdate += OnUpdate;
         }

@@ -31,13 +31,13 @@ namespace AOSharp.Pathfinding
         {
             List<Vector3> finalPath = new List<Vector3>();
 
-            if (FindNearestPoint(start, new sVector3(0.5f, 2, 0.5f), out NavPoint origin) || origin.Position == new sVector3())
+            if (!FindNearestPoint(start, new sVector3(0.5f, 2, 0.5f), out NavPoint origin) || origin.Position == new sVector3())
             {
                 Chat.WriteLine("Could not find valid origin point on navmesh");
                 return new List<Vector3>();
             }
 
-            if (FindNearestPoint(end, new sVector3(0.5f, 2, 0.5f), out NavPoint destination) || destination.Position == new sVector3())
+            if (!FindNearestPoint(end, new sVector3(0.5f, 2, 0.5f), out NavPoint destination) || destination.Position == new sVector3())
             {
                 Chat.WriteLine("Could not find valid destination point on navmesh");
                 return new List<Vector3>();
@@ -187,12 +187,12 @@ namespace AOSharp.Pathfinding
 
         //private PathCorridor GeneratePathCorridor(Vector3 start, Vector3 end)
         //{
-        //    if (FindNearestPoint(start, new sVector3(0.3f, 2, 0.3f), out NavPoint origin) || origin.Position == new sVector3())
+        //    if (!FindNearestPoint(start, new sVector3(0.3f, 2, 0.3f), out NavPoint origin) || origin.Position == new sVector3())
         //    {
         //        Chat.WriteLine("Could not find nearest origin point");
         //        return null;
         //    }
-        //    if (FindNearestPoint(end, new sVector3(0.3f, 2, 0.3f), out NavPoint destination) || destination.Position == new sVector3())
+        //    if (!FindNearestPoint(end, new sVector3(0.3f, 2, 0.3f), out NavPoint destination) || destination.Position == new sVector3())
         //    {
         //        Chat.WriteLine("Could not find nearest destination point");
         //        return null;

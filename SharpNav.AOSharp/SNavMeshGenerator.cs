@@ -16,42 +16,15 @@ namespace AOSharp.Pathfinding
 {
     public class SNavMeshGenerator
     {
-        public async static Task<NavMesh> Generate(NavMeshGenerationSettings settings)
+        public async static Task<NavMesh> GenerateAsync(NavMeshGenerationSettings settings)
         {
             try
             {
-                Stopwatch sw = Stopwatch.StartNew();
                 long prevMs = 0;
+                Stopwatch sw = Stopwatch.StartNew();
+                List<STriangle3> triMesh = GetTriGeometry(sw, ref prevMs);
 
-                Chat.WriteLine("Starting Navmesh Generation", ChatColor.Green);
-
-                List<Mesh> meshes = Playfield.IsDungeon ?
-                                        DungeonTerrain.CreateFromCurrentPlayfield() :
-                                        Terrain.CreateFromCurrentPlayfield();
-
-                Chat.WriteLine($"Loaded terrain mesh data. {FormatTime(sw.ElapsedMilliseconds - prevMs)}", ChatColor.Green);
-                prevMs = sw.ElapsedMilliseconds;
-
-                List<SurfaceResource> surfaces = Playfield.IsDungeon ?
-                                        Playfield.Rooms.Select(x => x.SurfaceResource).ToList() :
-                                        Playfield.Zones.Select(x => SurfaceResource.Get(Playfield.ModelIdentity.Instance << 16 | x.Instance)).ToList();
-
-                Chat.WriteLine($"Loaded surface resource mesh data {FormatTime(sw.ElapsedMilliseconds - prevMs)}", ChatColor.Green);
-                prevMs = sw.ElapsedMilliseconds;
-
-                List<STriangle3> tris = new List<STriangle3>();
-
-                tris.AddRange(GetTriMesh(meshes));
-
-                Chat.WriteLine($"Converted terrain mesh data to triangle data. {FormatTime(sw.ElapsedMilliseconds - prevMs)}", ChatColor.Green);
-                prevMs = sw.ElapsedMilliseconds;
-
-                tris.AddRange(GetTriMesh(surfaces));
-
-                Chat.WriteLine($"Converted surface resource mesh data to triangle data. {FormatTime(sw.ElapsedMilliseconds - prevMs)}", ChatColor.Green);
-                prevMs = sw.ElapsedMilliseconds;
-
-                var navMesh = await Task.Run(() => NavMesh.Generate(tris, settings));
+                var navMesh = await Task.Run(() => NavMesh.Generate(triMesh, settings));
 
                 Chat.WriteLine($"Generated nav mesh. {FormatTime(sw.ElapsedMilliseconds - prevMs)}", ChatColor.Green);
 
@@ -63,6 +36,62 @@ namespace AOSharp.Pathfinding
 
                 return null;
             }
+        }
+
+        public static bool Generate(NavMeshGenerationSettings settings, out NavMesh navMesh)
+        {
+            navMesh = null;
+
+            try
+            {
+                long prevMs = 0;
+                Stopwatch sw = Stopwatch.StartNew();
+                List<STriangle3> triMesh = GetTriGeometry(sw, ref prevMs);
+
+                navMesh = NavMesh.Generate(triMesh, settings);
+
+                Chat.WriteLine($"Generated nav mesh. {FormatTime(sw.ElapsedMilliseconds - prevMs)}", ChatColor.Green);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Chat.WriteLine(ex.Message, ChatColor.Red);
+                return false;
+            }
+        }
+
+        private static List<STriangle3> GetTriGeometry(Stopwatch sw, ref long prevMs)
+        {
+            Chat.WriteLine("Starting Navmesh Generation", ChatColor.Green);
+
+            List<Mesh> meshes = Playfield.IsDungeon ?
+                                    DungeonTerrain.CreateFromCurrentPlayfield() :
+                                    Terrain.CreateFromCurrentPlayfield();
+
+            Chat.WriteLine($"Loaded terrain mesh data. {FormatTime(sw.ElapsedMilliseconds - prevMs)}", ChatColor.Green);
+            prevMs = sw.ElapsedMilliseconds;
+
+            List<SurfaceResource> surfaces = Playfield.IsDungeon ?
+                                    Playfield.Rooms.Select(x => x.SurfaceResource).ToList() :
+                                    Playfield.Zones.Select(x => SurfaceResource.Get(Playfield.ModelIdentity.Instance << 16 | x.Instance)).ToList();
+
+            Chat.WriteLine($"Loaded surface resource mesh data {FormatTime(sw.ElapsedMilliseconds - prevMs)}", ChatColor.Green);
+            prevMs = sw.ElapsedMilliseconds;
+
+            List<STriangle3> tris = new List<STriangle3>();
+
+            tris.AddRange(GetTriMesh(meshes));
+
+            Chat.WriteLine($"Converted terrain mesh data to triangle data. {FormatTime(sw.ElapsedMilliseconds - prevMs)}", ChatColor.Green);
+            prevMs = sw.ElapsedMilliseconds;
+
+            tris.AddRange(GetTriMesh(surfaces));
+
+            Chat.WriteLine($"Converted surface resource mesh data to triangle data. {FormatTime(sw.ElapsedMilliseconds - prevMs)}", ChatColor.Green);
+            prevMs = sw.ElapsedMilliseconds;
+
+            return tris;
         }
 
         private static string FormatTime(long miliseconds) => string.Format("{0:mm\\:ss\\.fff}", TimeSpan.FromMilliseconds(miliseconds));
