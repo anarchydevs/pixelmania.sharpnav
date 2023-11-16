@@ -42,19 +42,12 @@
 
 //        public static void SaveNavMeshToFile(NavMesh navMesh)
 //        {
-//            SNavMeshSerializer serializer = new SNavMeshSerializer();
-
-//            if (serializer.SaveToFile(navMesh, $"C:\\Users\\someuser\\Desktop\\navmeshtest\\test.nav"))
-//            {
-
-//            }
+//            SNavMeshSerializer.SaveToFile(navMesh, $"C:\\Users\\someuser\\Desktop\\navmeshtest\\test.nav");
 //        }
 
 //        public static void LoadNavMeshFromFile()
 //        {
-//            SNavMeshSerializer serializer = new SNavMeshSerializer();
-
-//            if (serializer.LoadFromFile($"C:\\Users\\someuser\\Desktop\\navmeshtest\\test.nav", out NavMesh navMesh))
+//            if (SNavMeshSerializer.LoadFromFile($"C:\\Users\\someuser\\Desktop\\navmeshtest\\test.nav", out NavMesh navMesh))
 //            {
 
 //            }

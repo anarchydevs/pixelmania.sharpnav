@@ -65,6 +65,7 @@ namespace SharpNav.IO.Json
                 mergedregionsize = mesh.Settings.MergedRegionSize,
                 maxedgelength = mesh.Settings.MaxEdgeLength,
                 maxedgeerror = mesh.Settings.MaxEdgeError,
+                contourflags = (byte)mesh.Settings.ContourFlags,
                 vertsperpoly = mesh.Settings.VertsPerPoly,
                 sampledistance = mesh.Settings.SampleDistance,
                 maxsampleerror = mesh.Settings.MaxSampleError,
@@ -108,6 +109,7 @@ namespace SharpNav.IO.Json
             settings.MergedRegionSize = root["settings"]["mergedregionsize"].ToObject<int>();
             settings.MaxEdgeLength = root["settings"]["maxedgelength"].ToObject<int>();
             settings.MaxEdgeError = root["settings"]["maxedgeerror"].ToObject<float>();
+            settings.ContourFlags = (ContourBuildFlags)root["settings"]["contourflags"].ToObject<byte>();
             settings.VertsPerPoly = root["settings"]["vertsperpoly"].ToObject<int>();
             settings.SampleDistance = root["settings"]["sampledistance"].ToObject<int>();
             settings.MaxSampleError = root["settings"]["maxsampleerror"].ToObject<int>();

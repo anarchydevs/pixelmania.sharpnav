@@ -41,9 +41,6 @@
       <HintPath>packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="YamlDotNet, Version=13.0.0.0, Culture=neutral, PublicKeyToken=ec19458f3c15af5e, processorArchitecture=MSIL">
-      <HintPath>packages\YamlDotNet.13.7.1\lib\net47\YamlDotNet.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SharpNav.AOSharp\Debug.cs" />
@@ -95,7 +92,6 @@
     <Compile Include="SharpNav.Lib\IO\Json\NavMeshJsonSerializer.cs" />
     <Compile Include="SharpNav.Lib\IO\Json\PolyIdConverter.cs" />
     <Compile Include="SharpNav.Lib\IO\Json\Vector3Converter.cs" />
-    <Compile Include="SharpNav.Lib\IO\NavMeshConfigurationFile.cs" />
     <Compile Include="SharpNav.Lib\IO\NavMeshSerializer.cs" />
     <Compile Include="SharpNav.Lib\MathHelper.cs" />
     <Compile Include="SharpNav.Lib\NavMesh.cs" />

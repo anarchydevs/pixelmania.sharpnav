@@ -4,8 +4,6 @@
 using AOSharp.Common.GameData;
 using System;
 
-using YamlDotNet.Serialization;
-
 namespace SharpNav
 {
 	/// <summary>
@@ -133,7 +131,6 @@ namespace SharpNav
         /// <summary>
         /// Gets the height of the agents traversing the <see cref="NavMesh"/> in voxel (cell) units.
         /// </summary>
-        [YamlIgnore]
 		public int VoxelAgentHeight
 		{
 			get
@@ -145,7 +142,6 @@ namespace SharpNav
 		/// <summary>
 		/// Gets the maximum clim height in voxel (cell) units.
 		/// </summary>
-		[YamlIgnore]
 		public int VoxelMaxClimb
 		{
 			get
@@ -157,7 +153,6 @@ namespace SharpNav
 		/// <summary>
 		/// Gets the radius of the agents traversing the <see cref="NavMesh"/> in voxel (cell) units.
 		/// </summary>
-		[YamlIgnore]
 		public int VoxelAgentRadius
 		{
 			get

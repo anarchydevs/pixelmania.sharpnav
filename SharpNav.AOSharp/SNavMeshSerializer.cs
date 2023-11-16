@@ -7,7 +7,7 @@ namespace AOSharp.Pathfinding
 {
     public class SNavMeshSerializer
     {
-        public bool SaveToFile(NavMesh navMesh, string path)
+        public static bool SaveToFile(NavMesh navMesh, string path)
         {
             if (navMesh == null)
             {
@@ -30,7 +30,7 @@ namespace AOSharp.Pathfinding
             return true;
         }
 
-        public bool LoadFromFile(string path, out NavMesh navMeshBake)
+        public static bool LoadFromFile(string path, out NavMesh navMeshBake)
         {
             navMeshBake = null;
 
