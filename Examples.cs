@@ -17,7 +17,7 @@
 //            //SMovementController.Set(); Alternatively you can just .Set(), which will load the default settings for everything and populate or overwrite the SMovementController.Instance
 //        }
 
-//        public static void GenerateAsync()
+//        public static void Generation()
 //        {
 //            NavMeshGenerationSettings settings = NavMeshGenerationSettings.Default;
 //            settings.AgentHeight = 1.7f; // Needs more testing
@@ -32,20 +32,13 @@
 
 //                SMovementController.Instance?.SetNavmesh(navMesh.Result);
 //            });
-//        }
 
-//        public static void GenerateMainThread()
-//        {
-//            NavMeshGenerationSettings settings = NavMeshGenerationSettings.Default;
-//            settings.AgentHeight = 1.7f; // Needs more testing
-//            settings.AgentRadius = 0.25f; // Padding
-//            settings.CellSize = 0.4f; // Don't go too low on this (especially on big zones)
-//            settings.CellHeight = 0.07f; // Needs more testing
+//            //if (SNavMeshGenerator.Generate(settings, out NavMesh navMesh))  // Generation on main thread
+//            //{
+//            //    SMovementController.Instance?.SetNavmesh(navMesh);
+//            //}
 
-//            if (SNavMeshGenerator.Generate(settings, out NavMesh navMesh))
-//            {
-//                SMovementController.Instance?.SetNavmesh(navMesh);
-//            }
+//            //You can also specify bounds as the second arguement if you only need a geometry section
 //        }
 
 //        public static void SaveNavMeshToFile(NavMesh navMesh)
