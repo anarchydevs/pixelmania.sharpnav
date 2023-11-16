@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-
+using SharpNav;
 using SharpNav.Geometry;
 
 namespace SharpNav
@@ -15,24 +15,32 @@ namespace SharpNav
 	/// </summary>
 	public class NavMesh : TiledNavMesh
 	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="NavMesh" /> class.
-		/// </summary>
-		/// <param name="builder">The NavMeshBuilder data</param>
-		public NavMesh(NavMeshBuilder builder)
-			: base(builder)
-		{
-		}
 
-		/// <summary>
-		/// Generates a <see cref="NavMesh"/> given a collection of triangles and some settings.
-		/// </summary>
-		/// <param name="triangles">The triangles that form the level.</param>
-		/// <param name="settings">The settings to generate with.</param>
-		/// <returns>A <see cref="NavMesh"/>.</returns>
-		public static NavMesh Generate(IEnumerable<Triangle3> triangles, NavMeshGenerationSettings settings)
+		internal NavMeshGenerationSettings Settings;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NavMesh" /> class.
+        /// </summary>
+        /// <param name="builder">The NavMeshBuilder data</param>
+        public NavMesh(NavMeshBuilder builder)
+			: base(builder)
+        {
+        }
+
+        public NavMesh(Vector3 origin, float tileWidth, float tileHeight, int maxTiles, int maxPolys)
+           : base(origin, tileWidth, tileHeight, maxTiles, maxPolys)
+        {
+        }
+
+        /// <summary>
+        /// Generates a <see cref="NavMesh"/> given a collection of triangles and some settings.
+        /// </summary>
+        /// <param name="triangles">The triangles that form the level.</param>
+        /// <param name="settings">The settings to generate with.</param>
+        /// <returns>A <see cref="NavMesh"/>.</returns>
+        public NavMesh Generate(IEnumerable<Triangle3> triangles, NavMeshGenerationSettings settings)
 		{
-			BBox3 bounds = triangles.GetBoundingBox(settings.CellSize);
+            Settings = settings;
+            BBox3 bounds = triangles.GetBoundingBox(settings.CellSize);
 			var hf = new Heightfield(bounds, settings);
 			hf.RasterizeTriangles(triangles);
 			hf.FilterLedgeSpans(settings.VoxelAgentHeight, settings.VoxelMaxClimb);
@@ -45,15 +53,25 @@ namespace SharpNav
 			chf.BuildRegions(2, settings.MinRegionSize, settings.MergedRegionSize);
 
 			var cont = chf.BuildContourSet(settings);
-
 			var polyMesh = new PolyMesh(cont, settings);
-
 			var polyMeshDetail = new PolyMeshDetail(polyMesh, chf, settings);
-
 			var buildData = new NavMeshBuilder(polyMesh, polyMeshDetail, new Pathfinding.OffMeshConnection[0], settings);
-
 			var navMesh = new NavMesh(buildData);
+
 			return navMesh;
 		}
 	}
+}
+
+
+public class NavMeshBake
+{
+	public NavMeshGenerationSettings Settings { get; }
+    public TiledNavMesh NavMesh { get; }
+
+    public NavMeshBake(NavMeshGenerationSettings settings, TiledNavMesh navMesh)
+	{
+		Settings = settings;
+		NavMesh = navMesh;	
+    }
 }

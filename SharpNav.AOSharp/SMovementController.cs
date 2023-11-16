@@ -52,7 +52,7 @@ namespace AOSharp.Pathfinding
         }
 
 
-        public virtual void Update(object sender, float time)
+        internal virtual void Update(object sender, float time)
         {
             try
             {
@@ -108,10 +108,13 @@ namespace AOSharp.Pathfinding
             }
             catch (Exception e)
             {
-                Chat.WriteLine($"This shouldn't happen pls report (MovementController): {e.Message}");
+                Chat.WriteLine($"This shouldn't happen pls report (SMovementController): {e.Message}");
             }
         }
 
+        /// <summary>
+        /// Clears current path and stops the agent.
+        /// </summary>
         public void Halt()
         {
             _paths.Clear();
@@ -131,6 +134,9 @@ namespace AOSharp.Pathfinding
             });
         }
 
+        /// <summary>
+        /// Clears current path and assigns the provided path.
+        /// </summary>
         public void SetPath(List<Vector3> waypoints)
         {
             if (waypoints.Count() == 0 || waypoints == null)
@@ -139,6 +145,9 @@ namespace AOSharp.Pathfinding
             SetPath(waypoints, out _);
         }
 
+        /// <summary>
+        /// Appends given path to current path.
+        /// </summary>
         public void AppendPath(List<Vector3> waypoints)
         {
             if (waypoints.Count() == 0 || waypoints == null)
@@ -160,7 +169,7 @@ namespace AOSharp.Pathfinding
             return true;
         }
 
-        internal void AppendPath(Path path)
+        private void AppendPath(Path path)
         {
             _paths.Enqueue(path);
         }

@@ -19,13 +19,13 @@ namespace SharpNav.IO
 		/// </summary>
 		/// <param name="path">path of file to serialize into</param>
 		/// <param name="mesh">mesh to serialize</param>
-		public abstract void Serialize(string path, TiledNavMesh mesh);
+		public abstract void Serialize(string path, NavMesh mesh);
 
 		/// <summary>
 		/// Deserialize navigation mesh from external file
 		/// </summary>
 		/// <param name="path">file to deserialize from</param>
 		/// <returns>deserialized mesh</returns>
-		public abstract TiledNavMesh Deserialize(string path);
+		public abstract NavMesh Deserialize(string path);
 	}
 }

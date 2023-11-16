@@ -12,26 +12,25 @@ using STriangle3 = SharpNav.Geometry.Triangle3;
 using Vector3 = AOSharp.Common.GameData.Vector3;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
+using SharpNav.Geometry;
 
 namespace AOSharp.Pathfinding
 {
     public class SNavMeshGenerator
     {
-        public async static Task<NavMesh> GenerateAsync(NavMeshGenerationSettings settings) => await GenerateAsync(settings, Rect.Default);
-
-        public async static Task<NavMesh> GenerateAsync(NavMeshGenerationSettings settings, Rect bounds)
+        public async static Task<NavMesh> GenerateAsync(NavMeshGenerationSettings settings)
         {
             try
             {
                 long prevMs = 0;
                 Stopwatch sw = Stopwatch.StartNew();
 
-                var navMesh = await Task.Run(() => NavMesh.Generate(GetTriGeometry(bounds, sw, ref prevMs), settings));
+                var navMeshBake = await Task.Run(() => Generate(GetTriGeometry(settings.Bounds, sw, ref prevMs), settings));
 
                 Chat.WriteLine($"Generated nav mesh. {FormatTime(sw.ElapsedMilliseconds - prevMs)}", ChatColor.Green);
                 Chat.WriteLine($"Total generation time: {FormatTime(sw.ElapsedMilliseconds)}", ChatColor.Green);
 
-                return navMesh;
+                return navMeshBake;
             }
             catch (Exception ex)
             {
@@ -41,9 +40,7 @@ namespace AOSharp.Pathfinding
             }
         }
 
-        public static bool Generate(NavMeshGenerationSettings settings, out NavMesh navMesh) => Generate(settings, Rect.Default, out navMesh);
-     
-        public static bool Generate(NavMeshGenerationSettings settings, Rect bounds, out NavMesh navMesh)
+        public static bool Generate(NavMeshGenerationSettings settings, out NavMesh navMesh)
         {
             navMesh = null;
 
@@ -51,9 +48,9 @@ namespace AOSharp.Pathfinding
             {
                 long prevMs = 0;
                 Stopwatch sw = Stopwatch.StartNew();
-                List<STriangle3> triMesh = GetTriGeometry(bounds,sw, ref prevMs);
+                List<STriangle3> triMesh = GetTriGeometry(settings.Bounds, sw, ref prevMs);
 
-                navMesh = NavMesh.Generate(triMesh, settings);
+                navMesh = Generate(triMesh, settings);
 
                 Chat.WriteLine($"Generated nav mesh. {FormatTime(sw.ElapsedMilliseconds - prevMs)}", ChatColor.Green);
                 Chat.WriteLine($"Total generation time: {FormatTime(sw.ElapsedMilliseconds)}", ChatColor.Green);
@@ -169,6 +166,36 @@ namespace AOSharp.Pathfinding
             }
 
             return tris;
+        }
+
+        /// <summary>
+		/// Generates a <see cref="NavMesh"/> given a collection of triangles and some settings.
+		/// </summary>
+		/// <param name="triangles">The triangles that form the level.</param>
+		/// <param name="settings">The settings to generate with.</param>
+		/// <returns>A <see cref="NavMesh"/>.</returns>
+		private static NavMesh Generate(IEnumerable<Triangle3> triangles, NavMeshGenerationSettings settings)
+        {
+            BBox3 bounds = triangles.GetBoundingBox(settings.CellSize);
+            var hf = new Heightfield(bounds, settings);
+            hf.RasterizeTriangles(triangles);
+            hf.FilterLedgeSpans(settings.VoxelAgentHeight, settings.VoxelMaxClimb);
+            hf.FilterLowHangingWalkableObstacles(settings.VoxelMaxClimb);
+            hf.FilterWalkableLowHeightSpans(settings.VoxelAgentHeight);
+
+            var chf = new CompactHeightfield(hf, settings);
+            chf.Erode(settings.VoxelAgentRadius);
+            chf.BuildDistanceField();
+            chf.BuildRegions(2, settings.MinRegionSize, settings.MergedRegionSize);
+
+            var cont = chf.BuildContourSet(settings);
+            var polyMesh = new PolyMesh(cont, settings);
+            var polyMeshDetail = new PolyMeshDetail(polyMesh, chf, settings);
+            var buildData = new NavMeshBuilder(polyMesh, polyMeshDetail, new SharpNav.Pathfinding.OffMeshConnection[0], settings);
+            var navMesh = new NavMesh(buildData);
+            navMesh.Settings = settings;
+
+            return navMesh;
         }
     }
 }

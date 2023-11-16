@@ -1,6 +1,7 @@
 // Copyright (c) 2014-2015 Robert Rouhani <robert.rouhani@gmail.com> and other contributors (see CONTRIBUTORS file).
 // Licensed under the MIT License - https://raw.github.com/Robmaister/SharpNav/master/LICENSE
 
+using AOSharp.Common.GameData;
 using System;
 
 using YamlDotNet.Serialization;
@@ -43,7 +44,7 @@ namespace SharpNav
 				settings.VertsPerPoly = 3;
 				settings.SampleDistance = 6;
 				settings.MaxSampleError = 1;
-
+				settings.Bounds = Rect.Default;
                 settings.BuildBoundingVolumeTree = true;
 
 				return settings;
@@ -53,6 +54,7 @@ namespace SharpNav
 		/// <summary>
 		/// Gets or sets the size of a cell in the X and Z axes in world units.
 		/// </summary>
+		/// 
 		public float CellSize { get; set; }
 
 		/// <summary>
@@ -121,10 +123,17 @@ namespace SharpNav
 		/// </summary>
 		public bool BuildBoundingVolumeTree { get; set; }
 
-		/// <summary>
-		/// Gets the height of the agents traversing the <see cref="NavMesh"/> in voxel (cell) units.
-		/// </summary>
-		[YamlIgnore]
+
+        /// <summary>
+        /// Gets or sets the bounds for the mesh.
+        /// </summary>
+        /// 
+        public Rect Bounds { get; set; }
+
+        /// <summary>
+        /// Gets the height of the agents traversing the <see cref="NavMesh"/> in voxel (cell) units.
+        /// </summary>
+        [YamlIgnore]
 		public int VoxelAgentHeight
 		{
 			get

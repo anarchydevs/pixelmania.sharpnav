@@ -13,6 +13,7 @@ using SharpNav.Collections;
 using SharpNav.Geometry;
 using SharpNav.Pathfinding;
 using System.Reflection;
+using AOSharp.Common.GameData;
 
 #if MONOGAME
 using Vector3 = Microsoft.Xna.Framework.Vector3;
@@ -40,58 +41,89 @@ namespace SharpNav.IO.Json
 			});
 		}
 
-		public override void Serialize(string path, TiledNavMesh mesh)
-		{
-			JObject root = new JObject();
-		//	var bla = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+        public override void Serialize(string path, NavMesh mesh)
+        {
+            JObject root = new JObject();
 
-			var someObject = new
-			{
-				version = new
-				{
-					snj = FormatVersion,
-				 	sharpnav = "1.0.0"
-				}
-			};
+            root.Add("meta", JToken.FromObject(new
+            {
+                version = new
+                {
+                    snj = FormatVersion,
+                    sharpnav = "1.0.0"
+                }
+            }));
 
-            var aa = JToken.FromObject(someObject);
-
-            root.Add("meta", aa);
+            root.Add("settings", JToken.FromObject(new
+            {
+                cellsize = mesh.Settings.CellSize,
+                cellheight = mesh.Settings.CellHeight,
+                maxclimb = mesh.Settings.MaxClimb,
+                agentheight = mesh.Settings.AgentHeight,
+                agentradius = mesh.Settings.AgentRadius,
+                minregionsize = mesh.Settings.MinRegionSize,
+                mergedregionsize = mesh.Settings.MergedRegionSize,
+                maxedgelength = mesh.Settings.MaxEdgeLength,
+                maxedgeerror = mesh.Settings.MaxEdgeError,
+                vertsperpoly = mesh.Settings.VertsPerPoly,
+                sampledistance = mesh.Settings.SampleDistance,
+                maxsampleerror = mesh.Settings.MaxSampleError,
+                buildboundingvolumetree = mesh.Settings.BuildBoundingVolumeTree,
+                bounds = mesh.Settings.Bounds,
+            }));
 
             root.Add("origin", JToken.FromObject(mesh.Origin, serializer));
-			root.Add("tileWidth", JToken.FromObject(mesh.TileWidth, serializer));
-			root.Add("tileHeight", JToken.FromObject(mesh.TileHeight, serializer));
-			root.Add("maxTiles", JToken.FromObject(mesh.MaxTiles, serializer));
-			root.Add("maxPolys", JToken.FromObject(mesh.MaxPolys, serializer));
+            root.Add("tileWidth", JToken.FromObject(mesh.TileWidth, serializer));
+            root.Add("tileHeight", JToken.FromObject(mesh.TileHeight, serializer));
+            root.Add("maxTiles", JToken.FromObject(mesh.MaxTiles, serializer));
+            root.Add("maxPolys", JToken.FromObject(mesh.MaxPolys, serializer));
 
-			var tilesArray = new JArray();
-			foreach (NavTile tile in mesh.Tiles)
-			{
-				NavPolyId id = mesh.GetTileRef(tile);
-				tilesArray.Add(SerializeMeshTile(tile, id));
-			}
+            var tilesArray = new JArray();
+            foreach (NavTile tile in mesh.Tiles)
+            {
+                NavPolyId id = mesh.GetTileRef(tile);
+                tilesArray.Add(SerializeMeshTile(tile, id));
+            }
 
-			root.Add("tiles", tilesArray);
-			
-			File.WriteAllText(path, root.ToString());
-		}
+            root.Add("tiles", tilesArray);
 
-		public override TiledNavMesh Deserialize(string path)
+            File.WriteAllText(path, root.ToString());
+        }
+
+        public override NavMesh Deserialize(string path)
 		{
 			JObject root = JObject.Parse(File.ReadAllText(path));
 
 			if (root["meta"]["version"]["snj"].ToObject<int>() != FormatVersion)
 				throw new ArgumentException("The version of the file does not match the version of the parser. Consider using an older version of SharpNav or re-generating your .snj meshes.");
 
-			Vector3 origin = root["origin"].ToObject<Vector3>(serializer);
+            NavMeshGenerationSettings settings = new NavMeshGenerationSettings();
+
+            settings.CellSize = root["settings"]["cellsize"].ToObject<float>();
+            settings.CellHeight = root["settings"]["cellheight"].ToObject<float>();
+            settings.MaxClimb = root["settings"]["maxclimb"].ToObject<float>();
+            settings.AgentHeight = root["settings"]["agentheight"].ToObject<float>();
+            settings.AgentRadius = root["settings"]["agentradius"].ToObject<float>();
+            settings.MinRegionSize = root["settings"]["minregionsize"].ToObject<int>();
+            settings.MergedRegionSize = root["settings"]["mergedregionsize"].ToObject<int>();
+            settings.MaxEdgeLength = root["settings"]["maxedgelength"].ToObject<int>();
+            settings.MaxEdgeError = root["settings"]["maxedgeerror"].ToObject<float>();
+            settings.VertsPerPoly = root["settings"]["vertsperpoly"].ToObject<int>();
+            settings.SampleDistance = root["settings"]["sampledistance"].ToObject<int>();
+            settings.MaxSampleError = root["settings"]["maxsampleerror"].ToObject<int>();
+            settings.BuildBoundingVolumeTree = root["settings"]["buildboundingvolumetree"].ToObject<bool>();
+            settings.Bounds = root["settings"]["bounds"].ToObject<Rect>();
+
+            SharpNav.Geometry.Vector3 origin = root["origin"].ToObject<SharpNav.Geometry.Vector3>(serializer);
 			float tileWidth = root["tileWidth"].ToObject<float>(serializer);
 			float tileHeight = root["tileHeight"].ToObject<float>(serializer);
 			int maxTiles = root["maxTiles"].ToObject<int>(serializer);
 			int maxPolys = root["maxPolys"].ToObject<int>(serializer);
 
-			var mesh = new TiledNavMesh(origin, tileWidth, tileHeight, maxTiles, maxPolys);
+			var mesh = new NavMesh(origin, tileWidth, tileHeight, maxTiles, maxPolys);
+            mesh.Settings = settings;
 
-			JArray tilesToken = (JArray) root["tiles"];
+            JArray tilesToken = (JArray) root["tiles"];
 			List<NavTile> tiles = new List<NavTile>();
 			foreach (JToken tileToken in tilesToken)
 			{
@@ -100,10 +132,10 @@ namespace SharpNav.IO.Json
 				mesh.AddTileAt(tile, tileRef);
 			}
 
-			return mesh;
-		}
+            return mesh;
+        }
 
-		private JObject SerializeMeshTile(NavTile tile, NavPolyId id)
+        private JObject SerializeMeshTile(NavTile tile, NavPolyId id)
 		{
 			var result = new JObject();
 			result.Add("polyId", JToken.FromObject(id, serializer));
@@ -143,9 +175,9 @@ namespace SharpNav.IO.Json
 			result.Bounds = token["bounds"].ToObject<BBox3>(serializer);
 			result.Polys = token["polys"].ToObject<NavPoly[]>(serializer);
 			result.PolyCount = result.Polys.Length;
-			result.Verts = token["verts"].ToObject<Vector3[]>(serializer);
+			result.Verts = token["verts"].ToObject<SharpNav.Geometry.Vector3[]>(serializer);
 			result.DetailMeshes = token["detailMeshes"].ToObject<PolyMeshDetail.MeshData[]>(serializer);
-			result.DetailVerts = token["detailVerts"].ToObject<Vector3[]>(serializer);
+			result.DetailVerts = token["detailVerts"].ToObject<SharpNav.Geometry.Vector3[]>(serializer);
 			result.DetailTris = token["detailTris"].ToObject<PolyMeshDetail.TriangleData[]>(serializer);
 			result.OffMeshConnections = token["offMeshConnections"].ToObject<OffMeshConnection[]>(serializer);
 			result.OffMeshConnectionCount = result.OffMeshConnections.Length;

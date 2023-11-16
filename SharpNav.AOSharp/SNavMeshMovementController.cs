@@ -9,16 +9,17 @@ namespace AOSharp.Pathfinding
 {
     public class SNavMeshMovementController : SMovementController
     {
-        private const float PathUpdateInterval = 1f;
-
-        private SPathfinder _pathFinder;
-        protected readonly string _navMeshFolderPath;
-        private double _nextPathUpdate = 0;
-
         public delegate NavMesh NavmeshResolveDelegate(SNavMeshMovementController movementController);
         public event NavmeshResolveDelegate NavmeshResolve;
+
+        protected readonly string _navMeshFolderPath;
+
+        private const float PathUpdateInterval = 1f;
+        private double _nextPathUpdate = 0;
         private TriMeshData _triMeshData;
         private SNavMeshSettings _navMeshSettings;
+        private NavMeshGenerationSettings _genSettings;
+        private SPathfinder _pathFinder;
 
         public SNavMeshMovementController(SNavMeshControllerSettings settings) : base(settings.PathSettings)
         {
@@ -32,11 +33,16 @@ namespace AOSharp.Pathfinding
             _pathSettings = controllerSettings.PathSettings;
         }
 
-        public override void Update(object sender, float time)
+        internal override void Update(object sender, float time)
         {
             if (_navMeshSettings.DrawNavMesh && _triMeshData != null)
             {
                 _triMeshData.Draw(_navMeshSettings.DrawDistance);
+
+                bool isOnNavMesh = _pathFinder.IsOnNavMesh(_genSettings.AgentRadius, out Vector3 hitPos);
+
+                Vector3 color = isOnNavMesh ? DebuggingColor.Green : DebuggingColor.Red;
+                SDebug.DrawCylinder(hitPos, _genSettings.AgentRadius, _genSettings.AgentHeight, color);
             }
 
             if (IsNavigating && _paths.Peek() is SNavMeshPath path && path.Initialized && Time.NormalTime > _nextPathUpdate)
@@ -48,8 +54,14 @@ namespace AOSharp.Pathfinding
             base.Update(sender,time);
         }
 
+        /// <summary>
+        /// Generates a path from given coordinates.
+        /// </summary>
         public List<Vector3> GeneratePath(Vector3 startPos, Vector3 endPos) => _pathFinder.GeneratePath(startPos, endPos);
 
+        /// <summary>
+        /// Generates a path from given coordinate and returns the path distance.
+        /// </summary>
         public bool GetDistance(Vector3 destination, out float distance)
         {
             distance = 0;
@@ -69,27 +81,20 @@ namespace AOSharp.Pathfinding
             }
         }
 
+        /// <summary>
+        /// Sets NavMesh
+        /// </summary>
         public void SetNavmesh(NavMesh navmesh)
         {
             if (navmesh == null)
                 return;
 
             _pathFinder = new SPathfinder(navmesh);
+            _genSettings = navmesh.Settings;
 
             if (_navMeshSettings.DrawNavMesh)
                 _triMeshData = new TriMeshData(navmesh);
         }
-
-        public void SetNavmesh(TiledNavMesh navmesh)
-        {
-            if (navmesh == null)
-                return;
-
-            _pathFinder = new SPathfinder(navmesh);
-
-            if (_navMeshSettings.DrawNavMesh)
-                _triMeshData = new TriMeshData(navmesh);
-        } 
     }
 
     public class SNavMeshPath : Path

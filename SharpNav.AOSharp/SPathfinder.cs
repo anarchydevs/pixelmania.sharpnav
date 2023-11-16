@@ -8,6 +8,7 @@ using PathCorridor = SharpNav.Crowds.PathCorridor;
 using SharpNav.Pathfinding;
 using SharpNav;
 using AOSharp.Core.UI;
+using AOSharp.Core;
 
 namespace AOSharp.Pathfinding
 {
@@ -26,10 +27,36 @@ namespace AOSharp.Pathfinding
             _pathCorridor = new PathCorridor();
         }
 
+        internal bool IsOnNavMesh(float radius, out Vector3 hitPos)
+        {
+            Vector3 rayOrigin = DynelManager.LocalPlayer.Position;
+            Vector3 rayTarget = DynelManager.LocalPlayer.Position;
+            rayTarget.Y = 0;
+
+            if (!Playfield.Raycast(rayOrigin, rayTarget, out hitPos, out _))
+                hitPos = rayOrigin;
+
+            sVector3 startPos = hitPos.ToSharpNav();
+            sVector3 extents = new sVector3(5f, 5f, 5f);
+
+            try
+            {
+                _query.FindNearestPoly(ref startPos, ref extents, out NavPoint pt);
+                startPos.Y = 0;
+                pt.Position.Y = 0;
+
+                return Vector3.Distance(startPos.ToVector3(), pt.Position.ToVector3()) < radius;
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
         internal List<Vector3> GeneratePath(Vector3 start, Vector3 end)
         {
             List<Vector3> finalPath = new List<Vector3>();
+
 
             if (!FindNearestPoint(start, new sVector3(0.5f, 2, 0.5f), out NavPoint origin) || origin.Position == new sVector3())
             {

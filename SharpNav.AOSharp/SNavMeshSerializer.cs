@@ -7,7 +7,7 @@ namespace AOSharp.Pathfinding
 {
     public class SNavMeshSerializer
     {
-        public bool SaveToFile(TiledNavMesh navMesh, string path)
+        public bool SaveToFile(NavMesh navMesh, string path)
         {
             if (navMesh == null)
             {
@@ -30,19 +30,18 @@ namespace AOSharp.Pathfinding
             return true;
         }
 
-        public bool LoadFromFile(string path, out TiledNavMesh navMesh)
+        public bool LoadFromFile(string path, out NavMesh navMeshBake)
         {
-            navMesh = null;
+            navMeshBake = null;
 
             try
             {
-                navMesh = new NavMeshJsonSerializer().Deserialize(path);
+                navMeshBake = new NavMeshJsonSerializer().Deserialize(path);
             }
             catch (Exception e)
             {
                 Console.WriteLine("Navmesh loading failed with exception:" + Environment.NewLine + e.ToString());
                 return false;
-
             }
 
             return true;

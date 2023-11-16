@@ -46,6 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SharpNav.AOSharp\Debug.cs" />
     <Compile Include="SharpNav.AOSharp\Terrain.cs" />
     <Compile Include="SharpNav.Lib\Area.cs" />
     <Compile Include="SharpNav.Lib\AreaGenerator.cs" />
