@@ -11,22 +11,25 @@ using Mesh = AOSharp.Common.GameData.Mesh;
 using STriangle3 = SharpNav.Geometry.Triangle3;
 using Vector3 = AOSharp.Common.GameData.Vector3;
 using System.Threading.Tasks;
+using System.Collections.Concurrent;
 
 namespace AOSharp.Pathfinding
 {
     public class SNavMeshGenerator
     {
-        public async static Task<NavMesh> GenerateAsync(NavMeshGenerationSettings settings)
+        public async static Task<NavMesh> GenerateAsync(NavMeshGenerationSettings settings) => await GenerateAsync(settings, Rect.Default);
+
+        public async static Task<NavMesh> GenerateAsync(NavMeshGenerationSettings settings, Rect bounds)
         {
             try
             {
                 long prevMs = 0;
                 Stopwatch sw = Stopwatch.StartNew();
-                List<STriangle3> triMesh = GetTriGeometry(sw, ref prevMs);
 
-                var navMesh = await Task.Run(() => NavMesh.Generate(triMesh, settings));
+                var navMesh = await Task.Run(() => NavMesh.Generate(GetTriGeometry(bounds, sw, ref prevMs), settings));
 
                 Chat.WriteLine($"Generated nav mesh. {FormatTime(sw.ElapsedMilliseconds - prevMs)}", ChatColor.Green);
+                Chat.WriteLine($"Total generation time: {FormatTime(sw.ElapsedMilliseconds)}", ChatColor.Green);
 
                 return navMesh;
             }
@@ -38,7 +41,9 @@ namespace AOSharp.Pathfinding
             }
         }
 
-        public static bool Generate(NavMeshGenerationSettings settings, out NavMesh navMesh)
+        public static bool Generate(NavMeshGenerationSettings settings, out NavMesh navMesh) => Generate(settings, Rect.Default, out navMesh);
+     
+        public static bool Generate(NavMeshGenerationSettings settings, Rect bounds, out NavMesh navMesh)
         {
             navMesh = null;
 
@@ -46,22 +51,24 @@ namespace AOSharp.Pathfinding
             {
                 long prevMs = 0;
                 Stopwatch sw = Stopwatch.StartNew();
-                List<STriangle3> triMesh = GetTriGeometry(sw, ref prevMs);
+                List<STriangle3> triMesh = GetTriGeometry(bounds,sw, ref prevMs);
 
                 navMesh = NavMesh.Generate(triMesh, settings);
 
                 Chat.WriteLine($"Generated nav mesh. {FormatTime(sw.ElapsedMilliseconds - prevMs)}", ChatColor.Green);
+                Chat.WriteLine($"Total generation time: {FormatTime(sw.ElapsedMilliseconds)}", ChatColor.Green);
 
                 return true;
             }
             catch (Exception ex)
             {
                 Chat.WriteLine(ex.Message, ChatColor.Red);
+
                 return false;
             }
         }
 
-        private static List<STriangle3> GetTriGeometry(Stopwatch sw, ref long prevMs)
+        private static List<STriangle3> GetTriGeometry(Rect bounds,Stopwatch sw, ref long prevMs)
         {
             Chat.WriteLine("Starting Navmesh Generation", ChatColor.Green);
 
@@ -90,6 +97,32 @@ namespace AOSharp.Pathfinding
 
             Chat.WriteLine($"Converted surface resource mesh data to triangle data. {FormatTime(sw.ElapsedMilliseconds - prevMs)}", ChatColor.Green);
             prevMs = sw.ElapsedMilliseconds;
+
+            Rect defaultBounds = Rect.Default;
+
+            if (!(bounds.MinX == Rect.Default.MinX && bounds.MaxX == defaultBounds.MaxX && bounds.MinY == defaultBounds.MinY && bounds.MaxY == defaultBounds.MaxY))
+            {
+                ConcurrentBag<STriangle3> trianglesToRemove = new ConcurrentBag<STriangle3>();
+
+                Parallel.ForEach(tris.ToList(), tri =>
+                {
+                    if (!bounds.Contains(tri.A.ToVector3()) ||
+                        !bounds.Contains(tri.B.ToVector3()) ||
+                        !bounds.Contains(tri.C.ToVector3()))
+                    {
+                        trianglesToRemove.Add(tri);
+                    }
+                });
+
+                foreach (var triToRemove in trianglesToRemove)
+                {
+                    tris.Remove(triToRemove);
+                }
+
+
+                Chat.WriteLine($"Removing triangles outside of given bounds {bounds}. {FormatTime(sw.ElapsedMilliseconds - prevMs)}", ChatColor.Green);
+                prevMs = sw.ElapsedMilliseconds;
+            }
 
             return tris;
         }
