@@ -3,18 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-
-using Newtonsoft.Json;
-
 using SharpNav;
-
-#if MONOGAME
-using Vector3 = Microsoft.Xna.Framework.Vector3;
-#elif OPENTK
-using Vector3 = OpenTK.Vector3;
-#elif SHARPDX
-using Vector3 = SharpDX.Vector3;
-#endif
 
 namespace SharpNav.Geometry
 {
@@ -68,7 +57,6 @@ namespace SharpNav.Geometry
 		/// <summary>
 		/// Gets the center of the box.
 		/// </summary>
-		[JsonIgnore]
 		public Vector3 Center
 		{
 			get
@@ -80,7 +68,6 @@ namespace SharpNav.Geometry
 		/// <summary>
 		/// Gets the size of the box.
 		/// </summary>
-		[JsonIgnore]
 		public Vector3 Size
 		{
 			get

@@ -11,14 +11,6 @@ using SharpNav.Pathfinding;
 using System.Collections.ObjectModel;
 using SharpNav.IO.Json;
 
-#if MONOGAME
-using Vector3 = Microsoft.Xna.Framework.Vector3;
-#elif OPENTK
-using Vector3 = OpenTK.Vector3;
-#elif SHARPDX
-using Vector3 = SharpDX.Vector3;
-#endif
-
 namespace SharpNav
 {
 	/// <summary>
@@ -110,9 +102,9 @@ namespace SharpNav
 
 		public float TileHeight { get { return tileHeight; } }
 
-		public float MaxTiles { get { return maxTiles; } }
+		public int MaxTiles { get { return maxTiles; } }
 
-		public float MaxPolys { get { return maxPolys; } }
+		public int MaxPolys { get { return maxPolys; } }
 
 		/// <summary>
 		/// Gets the maximum number of tiles that can be stored

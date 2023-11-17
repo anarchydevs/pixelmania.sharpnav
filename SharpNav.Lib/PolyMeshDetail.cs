@@ -3,16 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-
+using AOSharp.Core.UI;
 using SharpNav.Geometry;
-
-#if MONOGAME
-using Vector3 = Microsoft.Xna.Framework.Vector3;
-#elif OPENTK
-using Vector3 = OpenTK.Vector3;
-#elif SHARPDX
-using Vector3 = SharpDX.Vector3;
-#endif
 
 namespace SharpNav
 {
@@ -768,7 +760,7 @@ namespace SharpNav
 
 			if (tris.Count == 0)
 			{
-				Console.WriteLine("Can't triangulate polygon, adding default data.");
+				Chat.WriteLine("Can't triangulate polygon, adding default data.");
 				return;
 			}
 
@@ -861,12 +853,12 @@ namespace SharpNav
 			int ntris = tris.Count;
 			if (ntris > MAX_TRIS)
 			{
-				//TODO we're using lists... let the user have super detailed meshes?
-				//Perhaps just a warning saying there's a lot of tris?
-				//tris.RemoveRange(MAX_TRIS + 1, tris.Count - MAX_TRIS);
-				//Console.WriteLine("WARNING: shrinking number of triangles.");
-			}
-		}
+                //TODO we're using lists... let the user have super detailed meshes?
+                //Perhaps just a warning saying there's a lot of tris?
+                //tris.RemoveRange(MAX_TRIS + 1, tris.Count - MAX_TRIS);
+                //Chat.WriteLine("WARNING: shrinking number of triangles.");
+            }
+        }
 
 		/// <summary>
 		/// Use the HeightPatch data to obtain a height for a certain location.
@@ -1108,8 +1100,8 @@ namespace SharpNav
 				var t = tris[i];
 				if (t.VertexHash0 == -1 || t.VertexHash1 == -1 || t.VertexHash2 == -1)
 				{
-					//remove dangling face
-					Console.WriteLine("WARNING: removing dangling face.");
+                    //remove dangling face
+                    Chat.WriteLine("WARNING: removing dangling face.");
 					tris[i] = tris[tris.Count - 1];
 					tris.RemoveAt(tris.Count - 1);
 					i--;

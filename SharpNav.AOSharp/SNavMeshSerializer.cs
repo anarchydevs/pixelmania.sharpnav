@@ -1,4 +1,5 @@
 ﻿using System;
+using AOSharp.Common.GameData;
 using AOSharp.Core.UI;
 using SharpNav;
 using SharpNav.IO.Json;
@@ -11,22 +12,21 @@ namespace AOSharp.Pathfinding
         {
             if (navMesh == null)
             {
-                Chat.WriteLine("No navmesh generated or loaded, cannot save.");
+                Chat.WriteLine("No navmesh generated or loaded, cannot save.", ChatColor.Red);
                 return false;
             }
 
             try
             {
-                new NavMeshJsonSerializer().Serialize(path, navMesh);
+                new NavMeshSerializer().Serialize(path, navMesh);
             }
             catch (Exception e)
             {
-                Chat.WriteLine("Navmesh saving failed with exception:" + Environment.NewLine + e.ToString());
+                Chat.WriteLine("Navmesh saving failed with exception:" + Environment.NewLine + e.ToString(), ChatColor.Red);
                 return false;
             }
 
-
-            Console.WriteLine("Saved to file!");
+            Chat.WriteLine("Successfully saved NavMesh file.", ChatColor.Green);
             return true;
         }
 
@@ -36,14 +36,18 @@ namespace AOSharp.Pathfinding
 
             try
             {
-                navMeshBake = new NavMeshJsonSerializer().Deserialize(path);
+                navMeshBake = new NavMeshSerializer().Deserialize(path);
+
+                if (navMeshBake == null)
+                    return false;
             }
             catch (Exception e)
             {
-                Console.WriteLine("Navmesh loading failed with exception:" + Environment.NewLine + e.ToString());
+                Chat.WriteLine("Navmesh loading failed with exception:" + Environment.NewLine + e.ToString(), ChatColor.Red);
                 return false;
             }
 
+            Chat.WriteLine("Successfully loaded NavMesh file.", ChatColor.Green);
             return true;
         }
     }

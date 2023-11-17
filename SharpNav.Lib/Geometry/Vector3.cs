@@ -22,13 +22,9 @@ SOFTWARE.
  */
 #endregion
 
-#if !MONOGAME && !OPENTK && !SHARPDX && !XNA && !UNITY3D
-
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace SharpNav.Geometry
 {
@@ -939,31 +935,26 @@ namespace SharpNav.Geometry
 		/// <summary>
 		/// Gets or sets an OpenTK.Vector3 with the X, Z, and Y components of this instance.
 		/// </summary>
-		[JsonIgnore]
 		public Vector3 Xzy { get { return new Vector3(X, Z, Y); } set { X = value.X; Z = value.Y; Y = value.Z; } }
 
 		/// <summary>
 		/// Gets or sets an OpenTK.Vector3 with the Y, X, and Z components of this instance.
 		/// </summary>
-		[JsonIgnore]
 		public Vector3 Yxz { get { return new Vector3(Y, X, Z); } set { Y = value.X; X = value.Y; Z = value.Z; } }
 
 		/// <summary>
 		/// Gets or sets an OpenTK.Vector3 with the Y, Z, and X components of this instance.
 		/// </summary>
-		[JsonIgnore]
 		public Vector3 Yzx { get { return new Vector3(Y, Z, X); } set { Y = value.X; Z = value.Y; X = value.Z; } }
 
 		/// <summary>
 		/// Gets or sets an OpenTK.Vector3 with the Z, X, and Y components of this instance.
 		/// </summary>
-		[JsonIgnore]
 		public Vector3 Zxy { get { return new Vector3(Z, X, Y); } set { Z = value.X; X = value.Y; Y = value.Z; } }
 
 		/// <summary>
 		/// Gets or sets an OpenTK.Vector3 with the Z, Y, and X components of this instance.
 		/// </summary>
-		[JsonIgnore]
 		public Vector3 Zyx { get { return new Vector3(Z, Y, X); } set { Z = value.X; Y = value.Y; X = value.Z; } }
 
 		#endregion
@@ -1160,5 +1151,3 @@ namespace SharpNav.Geometry
 		#endregion
 	}
 }
-
-#endif
