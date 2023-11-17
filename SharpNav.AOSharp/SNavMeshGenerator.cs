@@ -27,7 +27,7 @@ namespace AOSharp.Pathfinding
 
                 var navMeshBake = await Task.Run(() => Generate(GetTriGeometry(settings.Bounds, sw, ref prevMs), settings));
 
-                Chat.WriteLine($"Generated nav mesh. {FormatTime(sw.ElapsedMilliseconds - prevMs)}", ChatColor.Green);
+                Chat.WriteLine($"Converted triangle data to navmesh. {FormatTime(sw.ElapsedMilliseconds - prevMs)}", ChatColor.Green);
                 Chat.WriteLine($"Total generation time: {FormatTime(sw.ElapsedMilliseconds)}", ChatColor.Green);
 
                 return navMeshBake;
@@ -52,7 +52,7 @@ namespace AOSharp.Pathfinding
 
                 navMesh = Generate(triMesh, settings);
 
-                Chat.WriteLine($"Generated nav mesh. {FormatTime(sw.ElapsedMilliseconds - prevMs)}", ChatColor.Green);
+                Chat.WriteLine($"Converted triangle data to navmesh. {FormatTime(sw.ElapsedMilliseconds - prevMs)}", ChatColor.Green);
                 Chat.WriteLine($"Total generation time: {FormatTime(sw.ElapsedMilliseconds)}", ChatColor.Green);
 
                 return true;
