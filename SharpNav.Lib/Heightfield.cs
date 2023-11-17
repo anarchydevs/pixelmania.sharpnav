@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using SharpNav.Geometry;
 
 namespace SharpNav
@@ -42,34 +41,34 @@ namespace SharpNav
 			if (!BBox3.IsValid(ref bounds))
 				throw new ArgumentException("The bounds are considered invalid. See BBox3.IsValid for details.");
 
-			if (cellSize <= 0)
+            if (cellSize <= 0)
 				throw new ArgumentOutOfRangeException("cellSize", "Cell size must be greater than 0.");
 
 			if (cellHeight <= 0)
 				throw new ArgumentOutOfRangeException("cellHeight", "Cell height must be greater than 0.");
 
-			this.cellSize = cellSize;
+            this.cellSize = cellSize;
 			this.cellHeight = cellHeight;
 			this.bounds = b;
 
-			//make sure the bbox contains all the possible voxels.
-			width = (int)Math.Ceiling((b.Max.X - b.Min.X) / cellSize);
+            //make sure the bbox contains all the possible voxels.
+            width = (int)Math.Ceiling((b.Max.X - b.Min.X) / cellSize);
 			height = (int)Math.Ceiling((b.Max.Y - b.Min.Y) / cellHeight);
 			length = (int)Math.Ceiling((b.Max.Z - b.Min.Z) / cellSize);
 
-			bounds.Max.X = bounds.Min.X + width * cellSize;
-			bounds.Max.Y = bounds.Min.Y + height * cellHeight;
-			bounds.Max.Z = bounds.Min.Z + length * cellSize;
+            bounds.Max.X = bounds.Min.X + width * cellSize;
+            bounds.Max.Y = bounds.Min.Y + height * cellHeight;
+            bounds.Max.Z = bounds.Min.Z + length * cellSize;
 
-			cells = new Cell[width * length];
-			for (int i = 0; i < cells.Length; i++)
-				cells[i] = new Cell(height);
-		}
+            cells = new Cell[width * length];
+            for (int i = 0; i < cells.Length; i++)
+                cells[i] = new Cell(height);
+        }
 
-		/// <summary>
-		/// Gets the bounding box of the heightfield.
-		/// </summary>
-		public BBox3 Bounds
+        /// <summary>
+        /// Gets the bounding box of the heightfield.
+        /// </summary>
+        public BBox3 Bounds
 		{
 			get
 			{

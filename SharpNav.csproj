@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SharpNav.AOSharp\Debug.cs" />
+    <Compile Include="SharpNav.AOSharp\TerrainData.cs" />
     <Compile Include="SharpNav.AOSharp\Terrain.cs" />
     <Compile Include="SharpNav.Lib\Area.cs" />
     <Compile Include="SharpNav.Lib\AreaGenerator.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="SharpNav.Lib\Heightfield.cs" />
     <Compile Include="SharpNav.Lib\Heightfield.Rasterization.cs" />
     <Compile Include="SharpNav.Lib\HeightPatch.cs" />
+    <Compile Include="SharpNav.AOSharp\ObjExporter.cs" />
     <Compile Include="SharpNav.Lib\IO\NavMeshSerializer.cs" />
     <Compile Include="SharpNav.Lib\MathHelper.cs" />
     <Compile Include="SharpNav.Lib\NavMesh.cs" />
