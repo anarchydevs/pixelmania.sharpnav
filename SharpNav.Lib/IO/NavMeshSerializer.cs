@@ -1,7 +1,4 @@
-﻿// Copyright (c) 2015-2016 Robert Rouhani <robert.rouhani@gmail.com> and other contributors (see CONTRIBUTORS file).
-// Licensed under the MIT License - https://raw.github.com/Robmaister/SharpNav/master/LICENSE
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using SharpNav.Collections;
 using SharpNav.Geometry;
@@ -27,7 +24,7 @@ namespace SharpNav.IO.Json
 
         public void Serialize(string path, NavMesh mesh)
         {
-            using (BinaryWriter writer = new BinaryWriter(System.IO.File.Open(path, FileMode.Create)))
+            using (BinaryWriter writer = new BinaryWriter(File.Open(path, FileMode.Create)))
             {
                 writer.Write(NAVMESH_VERSION);
                 WriteNavMeshGenerationSettings(writer,mesh.Settings);
