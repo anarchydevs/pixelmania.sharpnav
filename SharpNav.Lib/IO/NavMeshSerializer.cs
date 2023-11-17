@@ -210,8 +210,6 @@ namespace SharpNav.IO.Json
             writer.Write(link.BMax);
         }
 
-
-        //something broken
         public NavMesh Deserialize(string path)
         {
             NavMesh navMesh;
